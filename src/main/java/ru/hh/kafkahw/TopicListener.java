@@ -21,16 +21,19 @@ public class TopicListener {
 
   @KafkaListener(topics = "topic1", groupId = "group1")
   public void atMostOnce(ConsumerRecord<?, String> consumerRecord, Acknowledgment ack) {
-    LOGGER.info("Try handle message, topic {}, payload {}", consumerRecord.topic(), consumerRecord.value());
-    service.handle("topic1", consumerRecord.value());
     ack.acknowledge();
+    LOGGER.info("Try handle message, topic {}, payload {}", consumerRecord.topic(), consumerRecord.value());
+    try {
+      service.handle("topic1", consumerRecord.value());
+    } catch (RuntimeException ignore) {
+    }
   }
 
   @KafkaListener(topics = "topic2", groupId = "group2")
   public void atLeastOnce(ConsumerRecord<?, String> consumerRecord, Acknowledgment ack) {
     LOGGER.info("Try handle message, topic {}, payload {}", consumerRecord.topic(), consumerRecord.value());
-    ack.acknowledge();
     service.handle("topic2", consumerRecord.value());
+    ack.acknowledge();
   }
 
   @KafkaListener(topics = "topic3", groupId = "group3")
