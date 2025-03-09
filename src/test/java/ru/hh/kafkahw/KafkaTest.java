@@ -49,7 +49,7 @@ class KafkaTest {
     Set<String> messages = IntStream.range(1, 101)
         .mapToObj(i -> UUID.randomUUID().toString())
         .collect(Collectors.toSet());
-    messages.forEach(message -> sender.doSomething("topic1", message));
+    messages.forEach(message -> sender.doSomethingMostOnce("topic1", message));
     Thread.sleep(5000);
     messages.forEach(message -> {
       assertTrue(1 >= service.count("topic1", message));
@@ -61,7 +61,7 @@ class KafkaTest {
     Set<String> messages = IntStream.range(1, 101)
         .mapToObj(i -> UUID.randomUUID().toString())
         .collect(Collectors.toSet());
-    messages.forEach(message -> sender.doSomething("topic2", message));
+    messages.forEach(message -> sender.doSomethingLeastOnce("topic2", message));
     Thread.sleep(5000);
     messages.forEach(message -> {
       assertTrue(1 <= service.count("topic2", message));
@@ -73,7 +73,7 @@ class KafkaTest {
     Set<String> messages = IntStream.range(1, 101)
         .mapToObj(i -> UUID.randomUUID().toString())
         .collect(Collectors.toSet());
-    messages.forEach(message -> sender.doSomething("topic3", message));
+    messages.forEach(message -> sender.doSomethingExactlyOnce("topic3", message));
     Thread.sleep(5000);
     messages.forEach(message -> {
       assertEquals(1, service.count("topic3", message));

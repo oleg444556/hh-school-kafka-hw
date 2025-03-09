@@ -19,6 +19,7 @@ public class TopicListener {
     this.service = service;
   }
 
+  // Сразу подтверждаем получение сообщения, а обработается оно должным образом или нет уже не важно
   @KafkaListener(topics = "topic1", groupId = "group1")
   public void atMostOnce(ConsumerRecord<?, String> consumerRecord, Acknowledgment ack) {
     ack.acknowledge();
@@ -29,6 +30,7 @@ public class TopicListener {
     }
   }
 
+  // Обрабатываем сообщение до тех пор, пока оно не обработается без ошибок, и затем подтверждаем
   @KafkaListener(topics = "topic2", groupId = "group2")
   public void atLeastOnce(ConsumerRecord<?, String> consumerRecord, Acknowledgment ack) {
     LOGGER.info("Try handle message, topic {}, payload {}", consumerRecord.topic(), consumerRecord.value());
