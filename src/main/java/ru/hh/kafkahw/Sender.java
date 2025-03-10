@@ -7,7 +7,7 @@ import ru.hh.kafkahw.internal.KafkaProducer;
 @Component
 public class Sender {
   private final KafkaProducer producer;
-  private final static int MAX_ATTEMPTS = 3;
+  private final static int MAX_ATTEMPTS = 5;
 
   @Autowired
   public Sender(KafkaProducer producer) {
@@ -24,7 +24,7 @@ public class Sender {
     }
   }
 
-  // Пробуем отправить сообщение 3 раза, может произойти дублирование сообщений
+  // Пробуем отправить сообщение 5 раз, может произойти дублирование сообщений
   // если сообщение уже отправилось, но в процессе отправки метода send возникла
   // еще ошибка, и мы снова пытаемся отправить сообщение, семантика позволяет это
   public void doSomethingLeastOnce(String topic, String message) {
@@ -38,9 +38,6 @@ public class Sender {
   }
 
   public void doSomethingExactlyOnce(String topic, String message) {
-    try {
-      producer.send(topic, message);
-    } catch (Exception ignore) {
-    }
+    doSomethingLeastOnce(topic, message);
   }
 }
